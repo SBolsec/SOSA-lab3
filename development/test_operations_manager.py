@@ -33,3 +33,7 @@ class TestOperationsManage(unittest.TestCase):
     def test_string_division(self):
         operations_manager = OperationsManager("10", "5")
         self.assertRaises(TypeError, operations_manager.perform_division)
+
+
+if __name__ == '__main__':
+    unittest.main()
