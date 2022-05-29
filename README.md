@@ -2,12 +2,12 @@
 
 ## 1. Running unit tests
 ```bash
-python -m unittest discover -s ./development -p "*test_*.py"
+python -m unittest discover -s ./src -p "*test_*.py"
 ```
 
 ## 2. Running bandit static analysis
 ```bash
-bandit -r ./development -f json -o ./logs/bandit.json
+bandit -r ./src -f json -o ./logs/bandit.json
 ```
 
 ## 3. Jenkins
