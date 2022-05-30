@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        def TIMESTAMP = sh(script: "echo `date +%c`", returnStdout: true).trim()
+        def TIMESTAMP = sh(script: 'echo `date +"%Y-%m-%d_%T"`', returnStdout: true).trim()
     }
 
     stages {
@@ -29,7 +29,7 @@ pipeline {
                     bandit: {
                         withEnv(["HOME=${env.WORKSPACE}"]) {
                             sh 'pip install bandit'
-                            sh '${HOME}/.local/bin/bandit -r ./test -f json -o "./logs/bandit_${TIMESTAMP}.json"'
+                            sh '${HOME}/.local/bin/bandit -r ./test -f json -o ./logs/bandit_${TIMESTAMP}.json'
                         }
                     }
                 )

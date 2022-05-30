@@ -1,3 +1,4 @@
+import math
 import sys
 import unittest
 
@@ -20,15 +21,15 @@ class TestOperationsManage(unittest.TestCase):
 
     def test_float_division_by_zero(self):
         operations_manager = OperationsManager(10.0, 0.0)
-        self.assertEqual(operations_manager.perform_division(), float("nan"))
+        self.assertTrue(math.isnan(operations_manager.perform_division()))
 
     def test_integer_division_by_zero(self):
         operations_manager = OperationsManager(10, 0)
-        self.assertEqual(operations_manager.perform_division(), float("nan"))
+        self.assertTrue(math.isnan(operations_manager.perform_division()))
 
     def test_overflow_division(self):
         operations_manager = OperationsManager(sys.float_info.max, sys.float_info.min)
-        self.assertEqual(operations_manager.perform_division(), float('inf'))
+        self.assertTrue(math.isinf(operations_manager.perform_division()))
 
     def test_string_division(self):
         operations_manager = OperationsManager("10", "5")
