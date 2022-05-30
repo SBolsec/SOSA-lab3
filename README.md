@@ -2,7 +2,7 @@
 
 ## 1. Running unit tests
 ```bash
-python -m unittest discover -s ./src -p "*test_*.py"
+python3 -m unittest discover -s ./src -p "*test_*.py"
 ```
 
 ## 2. Running bandit static analysis

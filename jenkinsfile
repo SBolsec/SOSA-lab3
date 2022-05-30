@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+    
+    environment {
+        def TIMESTAMP = sh(script: "echo `date +%c`", returnStdout: true).trim()
+    }
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: 'main', url: 'https://github.com/SBolsec/SOSA-lab3'
+                sh 'mv ./src ./test'
+                sh 'mkdir -p logs'
+            }
+        }
+    
+        stage('Test') {
+            agent {
+                docker {
+                    image 'python:3-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                parallel(
+                    unittest: {
+                        sh 'python3 -m unittest discover -s ./test -p "*test_*.py" &> ./logs/test_${TIMESTAMP}.out'
+                    },
+                    bandit: {
+                        withEnv(["HOME=${env.WORKSPACE}"]) {
+                            sh 'pip install bandit'
+                            sh '${HOME}/.local/bin/bandit -r ./test -f json -o "./logs/bandit_${TIMESTAMP}.json"'
+                        }
+                    }
+                )
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Delete last production build'
+                sh 'rm -rf ./production'
+                
+                echo 'Create new production build'
+                sh 'cp -r ./test ./production'
+                
+                echo 'Delete test build'
+                dir('test') {
+                    deleteDir()
+                }
+            }
+        }
+    }
+    
+    post {
+        failure {
+            echo 'Delete test directory'
+            sh 'rm -rf ./test'
+        }
+    }
+}
